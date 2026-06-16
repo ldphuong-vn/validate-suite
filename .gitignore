@@ -1,0 +1,10 @@
+# Generated validation outputs (per-run, personal)
+*.dossier.json
+*-validation.html
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
