@@ -301,7 +301,8 @@ const DOSSIER = {
     "problem_statement":"Khách hiện tại không thể tự tạo và gửi template ZNS có thương hiệu trong sản phẩm.",
     "assumptions":[
       {"id":"A1","text":"Khách hiện tại thực sự cần gửi ZNS, không chỉ chat","risk":"H","uncertainty":"M","status":"PARTIAL"},
-      {"id":"A2","text":"Hạ tầng tái dùng được ~80% như ước tính","risk":"H","uncertainty":"L","status":"VALIDATED"}]},
+      {"id":"A2","text":"Hạ tầng tái dùng được ~80% như ước tính","risk":"H","uncertainty":"L","status":"VALIDATED"},
+      {"id":"A3","text":"Khách sẵn lòng trả thêm cho add-on ZNS (chưa đo mức giá chấp nhận)","risk":"H","uncertainty":"H","status":"UNTESTED"}]},
   "stages":[
     {"stage_id":0,"name":"FRAMING","mode":"MUST_RUN","status":"PASSED","score":0.8,"gates":[],"ran_at":"2026-06-13T09:05:00Z"},
     {"stage_id":1,"name":"HARD_GATE","mode":"MUST_RUN","status":"PASSED","score":1.0,"gates":[
@@ -327,6 +328,9 @@ const DOSSIER = {
       {"failure_mode":"Vượt timeline 2–3 tuần","cause":"Phần API ZNS phức tạp hơn ước tính","mitigation":"Spike kỹ thuật 2 ngày trước khi cam kết sprint"}],
     "inversion":["Cam kết full sprint mà chưa spike API ZNS — gần như chắc chắn vỡ timeline"],
     "red_team":["Cầu ZNS có thể đã được giải quyết bằng cách khách tự gửi qua Zalo OA console — feature này thừa"],
+    "second_order":[
+      {"action":"Build ZNS Designer vào Product X","then":"Khách chuyển chăm sóc khách sang ZNS tự phục vụ","and_then":"Ticket support giảm nhưng kỳ vọng phản hồi nhanh dâng lên ở mọi kênh"},
+      {"action":"Định giá add-on tách khỏi gói chính","then":"Khách gói thấp muốn mua lẻ ZNS","and_then":"Áp lực mở pricing theo module — phải tính lại hàng rào giữa các gói"}],
     "decision_matrix":{"attached_to_stage":6,
       "criteria":[{"name":"Cầu thực","weight":0.4},{"name":"Chi phí build","weight":0.3},{"name":"Mở đường chiến lược","weight":0.3}],
       "options":["Build now","Pre-sell rồi build","Defer"],
@@ -334,7 +338,7 @@ const DOSSIER = {
         "Pre-sell rồi build":{"Cầu thực":0.85,"Chi phí build":0.8,"Mở đường chiến lược":0.9},
         "Defer":{"Cầu thực":0.5,"Chi phí build":1.0,"Mở đường chiến lược":0.3}},
       "weighted_totals":{"Build now":0.78,"Pre-sell rồi build":0.85,"Defer":0.59}}},
-  "decision":{"verdict":"GO","confidence":0.72,"confidence_threshold":0.65,
+  "decision":{"verdict":"GO","confidence":0.752,"confidence_threshold":0.65,
     "rationale":["Chi phí thấp do tái dùng ~80% hạ tầng","Mở đường cho ZNS Trigger + Mini App","Rủi ro cầu được kiểm soát bằng pre-sell + phỏng vấn"],
     "decision_type":"TYPE_2",
     "journal":{"decided_by":"Founder","decided_at":"2026-06-13T09:40:00Z",
@@ -343,11 +347,18 @@ const DOSSIER = {
   "gtm_plan":{"positioning":"ZNS có thương hiệu, tự phục vụ, ngay trong Product X",
     "beachhead":"Khách hiện tại đang active có nhu cầu nhắn chăm sóc",
     "channels":["In-app upsell","Zalo OA"],
-    "north_star_metric":"Số ZNS gửi thành công / khách / tháng"},
-  "lifecycle":{"expand_criteria":["Tỷ lệ adopt >30% trong 60 ngày"],
+    "messaging":["Tạo ZNS có thương hiệu ngay trong Product X — không cần nhờ agency","Dùng dữ liệu khách sẵn có để gửi đúng người, đúng lúc"],
+    "north_star_metric":"Số ZNS gửi thành công / khách / tháng",
+    "launch_steps":["Phỏng vấn 5 khách có nhu cầu ZNS (kiểm giả định A1, A3)","Pre-sell add-on cho 10 khách hiện tại","Beta 2 tuần với 5 khách","Công bố toàn bộ"],
+    "aarrr":{"acquisition":"Upsell in-app tới khách đang active","activation":"Tạo template ZNS đầu tiên trong 7 ngày đầu","retention":"Gửi ZNS đều đặn ≥2 lần/tháng","referral":"Khách giới thiệu bạn cùng ngành","revenue":"Tỷ lệ khách active trả tiền add-on"},
+    "okrs":[{"objective":"Chứng minh cầu ZNS trả tiền trong 1 quý","key_results":["≥10 khách trả tiền add-on","≥500 ZNS gửi thành công mỗi tháng","Điểm hài lòng add-on ≥ 40/100"]}]},
+  "lifecycle":{"funnel_metrics":["Phần trăm khách active thấy chỗ giới thiệu add-on","Phần trăm bấm tìm hiểu rồi dùng thử","Phần trăm dùng thử chuyển trả tiền"],
+    "cohort_retention":"Theo từng tháng: phần trăm khách còn gửi ZNS sau 30/60/90 ngày",
+    "expand_criteria":["Tỷ lệ adopt >30% trong 60 ngày"],
     "sunset_criteria":["<5% khách dùng sau 90 ngày"],
     "revalidation":{"trigger":"Sau 60 ngày hoặc khi Zalo đổi chính sách ZNS","stages_to_recheck":[3,5,8]}},
-  "render":{"rendered_at":"2026-06-13T09:41:00Z","output_path":"zns-designer-validation.html","template_version":"1.0.0"}
+  "render":{"rendered_at":"2026-06-13T09:41:00Z","output_path":"zns-designer-validation.html","template_version":"1.0.0",
+    "glossary":{"North Star":"Một số duy nhất nói lên giá trị khách nhận được — mọi nỗ lực soi về số này","AARRR":"Khung đo 5 bước khách đi qua: biết đến → khởi động → ở lại → giới thiệu → trả tiền"}}
 };
 /* ===== hết khối DOSSIER ===== */
 
