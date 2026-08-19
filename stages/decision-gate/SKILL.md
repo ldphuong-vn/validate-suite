@@ -60,6 +60,10 @@ This block must be substantive — the report surfaces it prominently. Fill:
   Anchor causes to the highest `risk × uncertainty` assumptions from `framing.assumptions`.
 - `lenses.inversion` — what would *guarantee* failure, stated so it can be avoided.
 - `lenses.red_team` — the strongest argument the opposition would make against proceeding.
+- `lenses.second_order` — **chỉ khi tag `downstream_effects` bật** (`../../lens-registry.md`;
+  tag tắt → không gọi, không ghi gì): với mỗi hành động chính của quyết định, truy "rồi sao nữa?"
+  hai bậc (`action → then → and_then`) — phản ứng đối thủ, thay đổi hành vi khách, hệ quả lên các
+  sản phẩm khác trong portfolio. Đặc biệt soi kỹ với quyết định Type-1. Xem `../../lenses/second-order.md`.
 
 See `../../lenses/premortem.md`, `inversion.md`, `red-team.md` for technique. A decision gate that
 produces no real critique has not done its job.
@@ -169,7 +173,7 @@ If confidence falls below threshold:
 ```
 
 ## What this stage writes (summary)
-- `lenses.six_hats`, `lenses.party_mode`, `lenses.premortem`, `lenses.inversion`, `lenses.red_team`, `lenses.decision_matrix`
+- `lenses.six_hats`, `lenses.party_mode`, `lenses.premortem`, `lenses.inversion`, `lenses.red_team`, `lenses.second_order` (chỉ khi tag `downstream_effects`), `lenses.decision_matrix`
 - `decision.*` (verdict, confidence, confidence_threshold, rationale, decision_type, journal)
 - `coaching.*` (stance, next_moves, watch_risk, capability_gaps, advisor_note)
 - the stage's own entry in `stages[]` (`stage_id: 6`, status, score, `lenses_applied`)

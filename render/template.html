@@ -527,8 +527,8 @@ function renderPipeline(d){
 }
 
 function renderCritique(d){
-  const L=d.lenses||{}; const pm=L.premortem||[]; const inv=L.inversion||[]; const rt=L.red_team||[];
-  if(!pm.length&&!inv.length&&!rt.length) return "";
+  const L=d.lenses||{}; const pm=L.premortem||[]; const inv=L.inversion||[]; const rt=L.red_team||[]; const so=L.second_order||[];
+  if(!pm.length&&!inv.length&&!rt.length&&!so.length) return "";
   const pmHtml=pm.map(p=>`<div class="pm"><div class="fm">${esc(p.failure_mode)}</div>
     <div class="cz">Nguyên nhân: ${esc(p.cause)}</div>
     ${p.mitigation?`<div class="mt">↪ Giảm thiểu: ${esc(p.mitigation)}</div>`:""}</div>`).join("");
@@ -536,13 +536,15 @@ function renderCritique(d){
     <ul class="crit-list">${inv.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
   const rtHtml=rt.length?`<h3 style="margin-top:18px"><span class="dot"></span>Phản biện gắt (phe chống)</h3>
     <ul class="crit-list">${rt.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"";
+  const soHtml=so.length?`<h3 style="margin-top:18px"><span class="dot"></span>Hệ quả dây chuyền (rồi sao nữa?)</h3>
+    <ul class="crit-list">${so.map(x=>`<li><b>${esc(x.action)}</b> → ${esc(x.then)} → ${esc(x.and_then)}</li>`).join("")}</ul>`:"";
   return `<section class="critique-sec">
     <div class="critique">
       <h2>Cách ý tưởng này có thể thất bại</h2>
       <div class="sub">Mổ xẻ trước · Nghĩ ngược · Phản biện gắt</div>
       <div class="crit-grid">
         <div class="crit-col"><h3><span class="dot"></span>Giả định đã thất bại (mổ xẻ trước)</h3>${pmHtml||'<p class="cz">—</p>'}</div>
-        <div class="crit-col">${invHtml}${rtHtml}</div>
+        <div class="crit-col">${invHtml}${rtHtml}${soHtml}</div>
       </div>
     </div></section>`;
 }
