@@ -425,6 +425,16 @@ const HAT_ORDER=[["white","Mũ trắng · Dữ liệu"],["red","Mũ đỏ · Tr�
 const esc=s=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const fmt=n=>n==null?"—":Number(n).toFixed(2);
 
+// Tái tạo công thức confidence của dossier-schema.md §4.6 — renderer tự đối chiếu.
+function computeConfidence(d){
+  const ok=new Set(["PASSED","ASSERTED","REVIEW_NEEDED"]);
+  const vals=(d.stages||[]).filter(s=>s.stage_id<=5&&ok.has(s.status))
+    .map(s=>(s.status==="REVIEW_NEEDED"?0.85:1)*(s.score||0));
+  if(!vals.length) return null;
+  const m=vals.reduce((a,b)=>a+b,0)/vals.length;
+  return Math.min(1,Math.max(0,Math.round(m*1000)/1000));
+}
+
 function renderHeader(d){
   const m=d.meta||{}, dec=d.decision||{};
   document.getElementById("title").textContent=m.title||"(không tiêu đề)";
@@ -436,7 +446,7 @@ function renderHeader(d){
   vw.textContent=VERDICT_LABEL[v]||v; vw.className="verdict-word v-"+v;
   document.getElementById("verdict-sub").textContent=v;
   // gauge
-  const c=dec.confidence, thr=dec.confidence_threshold??0.65;
+  const c=dec.confidence, thr=dec.confidence_threshold??(dec.decision_type==="TYPE_1"?0.75:0.65);
   document.getElementById("gval").textContent=c==null?"—":fmt(c);
   document.getElementById("gthr").textContent="/ ngưỡng "+fmt(thr);
   const fill=document.getElementById("gfill");
@@ -444,6 +454,16 @@ function renderHeader(d){
   fill.style.background=below?"var(--nogo)":"var(--go)";
   if(below) document.getElementById("gval").classList.add("below");
   requestAnimationFrame(()=>{fill.style.width=((c==null?0:c)*100).toFixed(0)+"%";});
+  // self-verify confidence
+  const oldCv=document.getElementById("confverify"); if(oldCv) oldCv.remove();
+  const cc=computeConfidence(d);
+  if(c!=null&&cc!=null){
+    const okc=Math.abs(c-cc)<=0.005;
+    const badge=document.createElement("div");
+    badge.className="verify"+(okc?"":" bad"); badge.id="confverify";
+    badge.textContent=(okc?"✓ Confidence khớp":"⚠ Confidence LỆCH")+" với số hệ thống tự tính lại ("+fmt(cc)+")";
+    document.querySelector(".gauge").appendChild(badge);
+  }
   // makers
   const mk=document.getElementById("makers");
   (d.intake?.decision_makers||[]).forEach(p=>{
