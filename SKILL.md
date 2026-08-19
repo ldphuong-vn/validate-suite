@@ -25,11 +25,12 @@ Create an in-memory Dossier with `meta.schema_version = "1.0.0"`, a `dossier_id`
 Set `meta.mode` (`STATEFUL` | `STATELESS`) — see `modes.md`. Default to the surface: private/with-backend →
 `STATEFUL`; external one-shot → `STATELESS`.
 
-> **Chạy dạng skill trong chat:** khi chưa nối một lớp lưu trữ (database lưu Dossier/outcome/
-> tripwire/founder_profile + scheduled jobs), **buộc `STATELESS`**. Lý do: lớp mentor không có nơi
-> ghi — chạy STATEFUL sẽ "hứa đã lưu / đã arm tripwire" trong khi không có store nào, đúng kiểu ảo
-> giác mà `guardrails.md` cấm. Vẫn ghi Dossier ra file `*.dossier.json` + render HTML để xem lại.
-> Bật STATEFUL chỉ sau khi đã nối backend lưu trữ.
+> **Chạy dạng skill trong chat:** store mặc định là **file store** tại `~/.validate-suite/`
+> (xem `store.md`) — không cần PostgreSQL. Store chưa tồn tại → hỏi người dùng MỘT câu có muốn
+> bật trí nhớ không: đồng ý → tạo thư mục, chạy STATEFUL; từ chối hoặc không ghi được → STATELESS
+> (nói rõ giới hạn một lần trong báo cáo). Người dùng nói "chế độ một lần / incognito / đừng lưu"
+> → STATELESS cho riêng lần đó. Lý do giữ nguyên tinh thần cũ: chỉ hứa "đã lưu" khi CÓ nơi ghi thật.
+> Dù mode nào cũng ghi Dossier ra file `*.dossier.json` + render HTML để xem lại.
 
 The mode controls a memory/calibration layer on top of
 the same core pipeline:
@@ -39,6 +40,10 @@ the same core pipeline:
 - **STATELESS** (external one-shot): no memory reads/writes, no calibration, no profile, no outcome
   tracking; use static default thresholds; retain nothing after the session; state the one-shot
   limitation transparently in the report (`modes.md`).
+
+**Heartbeat (chỉ STATEFUL — chạy TRƯỚC Intake):** đọc store theo `store.md`. Có Dossier quá hạn
+rà outcome (>60 ngày chưa có kết quả) hoặc tripwire đến hạn → nudge người dùng tối đa 1–2 dòng,
+hỏi kết quả, ghi `outcomes.jsonl` ngay trong phiên. Không có gì đến hạn → im lặng, vào Intake.
 
 ## Step 1 — Intake (classify + route)
 Read the user's free-form description and **infer `case_type`**. Only ask the user directly if genuinely ambiguous; otherwise infer and confirm the routing map in Step 2.
@@ -121,6 +126,11 @@ output HTML. Then present the file. The renderer is the only component that prod
 Before injecting, populate `render.glossary`: read `glossary.md` and convert it into a
 `{term: one-line plain-language definition}` map. The report's tooltips draw from that single
 source — the template only keeps a static fallback for when a Dossier carries no glossary.
+
+**Sau khi render (chỉ STATEFUL):** `save_dossier` vào ledger; chuyển từng
+`journal.reversal_conditions` thành tripwire ARMED (`arm_tripwires`); cập nhật `founder_profile`;
+nếu phiên này vừa ghi outcome mới → `recompute_calibration`. Luôn nói cho người dùng biết đã lưu
+ở đâu (đường dẫn file thật) — không hứa hụt.
 
 ## Console style
 One line per stage, machine-clean, Vietnamese to match the user. Lead each with `[Tầng N · <name>]`,
