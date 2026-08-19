@@ -41,8 +41,7 @@ the same core pipeline:
   limitation transparently in the report (`modes.md`).
 
 ## Step 1 — Intake (classify + route)
-Read the user's free-form description and **infer `case_type`**. Only ask the user (via
-`ask_user_input`) if genuinely ambiguous; otherwise infer and confirm the routing map in Step 2.
+Read the user's free-form description and **infer `case_type`**. Only ask the user directly if genuinely ambiguous; otherwise infer and confirm the routing map in Step 2.
 
 | case | meaning | typical entry signal |
 |---|---|---|
@@ -96,7 +95,7 @@ get a quick confirmation:
 
 ## Step 3 — Run stages in order
 Walk `stage_id` 0→8. For each stage per its `mode`:
-- **MUST_RUN** → `view` the stage's SKILL.md (`stages/<name>/SKILL.md`) and execute it; it writes its
+- **MUST_RUN** → `read` the stage's SKILL.md (`stages/<name>/SKILL.md`) and execute it; it writes its
   record into `stages[]`.
 - **ASSERT** → ask the user for / pull the existing evidence, write a stage record with
   `status: ASSERTED` and the evidence in `notes` (+ refs). Do not run new gates.

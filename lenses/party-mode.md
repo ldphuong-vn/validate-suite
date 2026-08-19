@@ -9,7 +9,7 @@ Sáu mũ là các *kiểu nghĩ* của cùng một cái đầu. Party Mode là c
 riêng*, được phép BẤT ĐỒNG với nhau. Giá trị lớn nhất không nằm ở từng ý kiến — mà ở **chỗ các
 persona xung đột**: đó chính là nơi rủi ro và bất định thật sự cư trú.
 
-Lưu ý trung thực: đây vẫn là một Claude sinh ra nhiều giọng phân tích, không phải các agent có thông
+Lưu ý trung thực: đây vẫn là một agent AI sinh ra nhiều giọng phân tích, không phải các agent có thông
 tin riêng. Giá trị là ép ra những điểm nhìn thật sự khác nhau và phơi bày mâu thuẫn — không phải giả
 vờ có nhiều "người".
 

@@ -31,7 +31,7 @@ theo Type), nên bằng chứng yếu **tự động** kéo confidence xuống �
 
 Khi cần một con số (CAC, LTV, TAM, %, giá…) mà KHÔNG có sẵn, agent có đúng ba lựa chọn — không bao
 giờ điền một con số "nghe hợp lý":
-1. **Tra cứu** bằng công cụ thật (web_search / dữ liệu nội bộ) → đánh dấu `CITED`/`MEASURED`.
+1. **Tra cứu** bằng công cụ thật (công cụ tìm kiếm web của agent đang chạy / dữ liệu nội bộ) → đánh dấu `CITED`/`MEASURED`.
 2. **Hỏi người dùng** → đánh dấu `USER_STATED`.
 3. **Đánh dấu `UNKNOWN`** và để confidence phản ánh sự thiếu hụt.
 

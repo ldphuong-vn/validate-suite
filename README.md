@@ -1,6 +1,6 @@
 # validate-suite
 
-> A Claude Code skill that validates business ideas / products / features / pivots / point decisions
+> An agent-native skill (Claude Code, Codex, Gemini CLI, Cursor, Copilot, ...) that validates business ideas / products / features / pivots / point decisions
 > (pricing, channel, kill/sunset) through a **gated, evidence-based** pipeline, then renders an **HTML
 > report** (a Validation Dossier). Instead of ad-hoc analysis, every conclusion is scored, critiqued,
 > and traceable to the *type* of evidence behind it.
@@ -22,17 +22,25 @@ The core idea is **anti-hallucination discipline**: every score is tagged with a
 (measured / cited / user-stated / assumed / unknown), and weak evidence *automatically* lowers
 confidence. A confident "GO" can never rest on guesses.
 
-### Install
+### Install (works with many AI agents)
 
-Drop the `validate-suite/` folder into one of:
+The skill follows the open **Agent Skills** standard (`SKILL.md` + folder), supported by Claude Code,
+Codex CLI, Gemini CLI, Cursor, Copilot, Windsurf and others. Drop the `validate-suite/` folder into
+your agent's skills directory:
 
-- **Shared across all projects:** `~/.claude/skills/validate-suite/`
-- **One project only:** `<project>/.claude/skills/validate-suite/`
+| Agent | Skills directory |
+|---|---|
+| Claude Code | `~/.claude/skills/validate-suite/` (project: `.claude/skills/`) |
+| Gemini CLI | `~/.gemini/skills/validate-suite/` |
+| Codex CLI | `~/.codex/skills/validate-suite/` |
+| Cursor | `~/.cursor/skills/validate-suite/` — or read directly from `~/.claude/skills/` / `.codex/skills/` |
 
-> Cloning this repo? The repo root *is* the skill (entry: `SKILL.md`). Put the cloned folder where
-> Claude Code looks for skills, e.g. `~/.claude/skills/validate-suite/`.
+> **One copy, many agents:** keep a single master copy and symlink/junction it into each agent's
+> skills directory instead of duplicating.
 
-Open Claude Code — the skill is auto-detected. No database, no service, nothing else to install.
+> Cloning this repo? The repo root *is* the skill (entry: `SKILL.md`).
+
+Open your agent — the skill is auto-detected. No database, no service, nothing else to install.
 
 ### Use
 
@@ -52,8 +60,9 @@ gate (one console line each) → emits a **verdict (Go / No-go / Pivot / Park) +
 | `STATELESS` (default when run as a chat skill) | one-shot, nothing saved | none |
 | `STATEFUL` | needs a storage backend (PostgreSQL + outcome tracking) | yes: calibration, nudges, founder profile |
 
-`STATEFUL` enables a "mentor layer" (see `mentor-layer.md`) and only works when wired to a storage
-backend. Running as a plain chat skill: keep it `STATELESS`.
+`STATEFUL` enables a "mentor layer" (see `mentor-layer.md`). Its default backend is a file store at
+`~/.validate-suite/` (see `store.md`) — no database needed. Switching agents keeps the same ledger:
+the store lives outside every agent's folder.
 
 ### Structure
 
@@ -88,7 +97,7 @@ MIT — see [LICENSE](LICENSE).
 
 ### Là gì
 
-`validate-suite` là bộ skill (Claude Code) thẩm định ý tưởng / sản phẩm / tính năng / pivot / quyết
+`validate-suite` là bộ skill chuẩn mở (Agent Skills — chạy trên Claude Code, Codex, Gemini CLI, Cursor, Copilot...) thẩm định ý tưởng / sản phẩm / tính năng / pivot / quyết
 định kinh doanh (giá, kênh, kill/sunset) theo một quy trình **có cổng — dựa bằng chứng** rồi xuất ra
 **báo cáo HTML** (Validation Dossier). Thay vì phân tích ngẫu hứng, mọi kết luận đều có điểm số, có
 phản biện, và truy được dựa trên *loại* bằng chứng nào.
@@ -97,17 +106,24 @@ Cốt lõi là **kỷ luật chống ảo giác**: mỗi điểm số gắn lo�
 dùng nêu / giả định / chưa rõ); bằng chứng yếu **tự động** kéo độ tin cậy xuống. Một kết luận "Tiến
 hành" tự tin không bao giờ được dựa trên phỏng đoán.
 
-### Cài đặt
+### Cài đặt (chạy được trên nhiều agent AI)
 
-Thả thư mục `validate-suite/` vào một trong hai nơi:
+Bộ tuân theo chuẩn mở **Agent Skills** (thư mục + `SKILL.md`) mà Claude Code, Codex CLI, Gemini CLI,
+Cursor, Copilot, Windsurf... đều hỗ trợ. Thả thư mục `validate-suite/` vào thư mục skills của agent đang dùng:
 
-- **Dùng chung mọi dự án:** `~/.claude/skills/validate-suite/`
-- **Chỉ trong 1 dự án:** `<project>/.claude/skills/validate-suite/`
+| Agent | Thư mục skills |
+|---|---|
+| Claude Code | `~/.claude/skills/validate-suite/` (trong dự án: `.claude/skills/`) |
+| Gemini CLI | `~/.gemini/skills/validate-suite/` |
+| Codex CLI | `~/.codex/skills/validate-suite/` |
+| Cursor | `~/.cursor/skills/validate-suite/` — hoặc đọc thẳng từ `~/.claude/skills/` / `.codex/skills/` |
 
-> Clone repo này? Gốc repo *chính là* skill (entry: `SKILL.md`). Đặt thư mục clone vào nơi Claude Code
-> tìm skill, vd `~/.claude/skills/validate-suite/`.
+> **Một bản, nhiều agent:** giữ đúng MỘT bản gốc rồi symlink/junction vào thư mục skills của từng
+> agent, thay vì copy nhiều bản.
 
-Mở Claude Code, skill tự được nhận diện. Không cần database, không service, không cài thêm gì.
+> Clone repo này? Gốc repo *chính là* skill (entry: `SKILL.md`).
+
+Mở agent của anh — skill tự được nhận diện. Không cần database, không service, không cài thêm gì.
 
 ### Dùng
 
@@ -127,8 +143,9 @@ xuất một file **HTML báo cáo** (kèm `*.dossier.json` là dữ liệu ngu�
 | `STATELESS` (mặc định khi chạy dạng skill chat) | dùng một lần, không lưu | không |
 | `STATEFUL` | cần một backend lưu trữ (PostgreSQL + theo dõi outcome) | có: hiệu chỉnh, nhắc, hồ sơ người dùng |
 
-`STATEFUL` bật "lớp mentor" (xem `mentor-layer.md`) — chỉ hoạt động khi đã nối hạ tầng lưu trữ. Chạy
-dạng skill chat: để `STATELESS`.
+`STATEFUL` bật "lớp mentor" (xem `mentor-layer.md`). Backend mặc định là file store tại
+`~/.validate-suite/` (xem `store.md`) — không cần database. Đổi agent vẫn dùng chung một sổ quyết định:
+store nằm ngoài thư mục của mọi agent.
 
 ### Cấu trúc
 
