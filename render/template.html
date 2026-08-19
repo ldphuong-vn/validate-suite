@@ -90,6 +90,16 @@
   .problem .k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--rail-soft);margin-bottom:4px}
 
+  /* assumption table */
+  table.asm{width:100%;border-collapse:collapse;font-size:14px;margin-top:18px}
+  table.asm th,table.asm td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  table.asm thead th{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--rail-soft);font-weight:500}
+  table.asm .aid{font-family:var(--mono);color:var(--rail-soft);white-space:nowrap}
+  table.asm .lv{font-family:var(--mono);font-size:12px}
+  .lv-H{color:var(--nogo)} .lv-M{color:var(--pivot)} .lv-L{color:var(--go)}
+  tr.asm-hot{background:#FBE9E7}
+  .asm-note{font-size:12.5px;color:var(--ink-soft);margin-top:6px}
+
   /* routing / pipeline ledger */
   .pipe{display:grid;gap:6px}
   .pipe-row{display:grid;grid-template-columns:30px 1fr auto auto;gap:14px;align-items:center;
@@ -369,6 +379,7 @@ const EV_LABEL={MEASURED:"đo được",CITED:"có dẫn nguồn",USER_STATED:"n
 const GVERDICT_LABEL={PASS:"Đạt",FAIL:"Không đạt",REVIEW:"Cần xem lại"};
 const STATUS_LABEL={PENDING:"Chờ",RUNNING:"Đang chạy",PASSED:"Đạt",FAILED:"Không đạt",REVIEW_NEEDED:"Cần xem lại",ASSERTED:"Đã ghi nhận",SKIPPED:"Bỏ qua"};
 const TYPE_LABEL={TYPE_1:"Khó đảo ngược",TYPE_2:"Đảo được"};
+const ASM_STATUS_LABEL={UNTESTED:"Chưa kiểm",VALIDATED:"Đã xác thực",INVALIDATED:"Đã bác bỏ",PARTIAL:"Một phần"};
 // Lớp chú giải: thuật ngữ → nghĩa đời thường (rút từ glossary.md). Renderer tự gạch chân + tooltip.
 const TERMS={
   "CAC":"Chi phí để có được 1 khách hàng","LTV":"Tổng tiền một khách mang lại trong suốt thời gian gắn bó",
@@ -451,14 +462,27 @@ function renderExec(d){
 }
 
 function renderFraming(d){
-  const w=d.framing?.five_w_one_h; if(!w) return "";
+  const w=d.framing?.five_w_one_h;
+  const as=d.framing?.assumptions||[];
+  if(!w&&!as.length) return "";
   const map=[["what","What · Cái gì"],["why","Why · Vì sao"],["who","Who · Ai"],
     ["when","When · Khi nào"],["where","Where · Ở đâu"],["how","How · Thế nào"]];
-  const cells=map.map(([k,lab])=>`<div class="w-cell"><div class="k">${lab}</div><div>${esc(w[k])}</div></div>`).join("");
+  const cells=w?map.map(([k,lab])=>`<div class="w-cell"><div class="k">${lab}</div><div>${esc(w[k])}</div></div>`).join(""):"";
   let extra="";
   if(d.framing.problem_statement)
     extra=`<div class="problem"><div class="k">Vấn đề cốt lõi</div><div>${esc(d.framing.problem_statement)}</div></div>`;
-  return sec("","Đóng khung vấn đề (6 câu hỏi nền)",`<div class="w-grid">${cells}</div>${extra}`);
+  let asm="";
+  if(as.length){
+    const lv=x=>`<span class="lv lv-${esc(x)}">${esc(x)}</span>`;
+    const rows=as.map(a=>`<tr class="${(a.risk==="H"&&a.uncertainty==="H")?"asm-hot":""}">
+      <td class="aid">${esc(a.id)}</td><td>${esc(a.text)}</td>
+      <td>${lv(a.risk)}</td><td>${lv(a.uncertainty)}</td>
+      <td>${esc(ASM_STATUS_LABEL[a.status]||a.status||"—")}</td></tr>`).join("");
+    asm=`<table class="asm"><thead><tr><th>ID</th><th>Giả định</th><th>Rủi ro</th><th>Bất định</th><th>Trạng thái</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+      <p class="asm-note">Dòng đỏ = giả định rủi ro cao và chưa rõ — cần kiểm chứng gấp nhất, tầng xác thực giải pháp sẽ nhắm vào nó trước.</p>`;
+  }
+  return sec("","Đóng khung vấn đề (6 câu hỏi nền)",`<div class="w-grid">${cells}</div>${extra}${asm}`);
 }
 
 function renderPipeline(d){
