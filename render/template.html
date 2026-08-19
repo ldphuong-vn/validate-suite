@@ -100,6 +100,14 @@
   tr.asm-hot{background:#FBE9E7}
   .asm-note{font-size:12.5px;color:var(--ink-soft);margin-top:6px}
 
+  /* question & context block (container tái dùng .problem) */
+  .qs .q{font-family:var(--disp);font-size:19px;font-weight:600;line-height:1.35}
+  .qs-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+  .mode-chip{font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .mode-STATELESS{background:#EDEFF6;color:var(--park)}
+  .mode-STATEFUL{background:#E6F4EC;color:var(--go)}
+  .mode-note{font-size:13px;color:var(--ink-soft)}
+
   /* routing / pipeline ledger */
   .pipe{display:grid;gap:6px}
   .pipe-row{display:grid;grid-template-columns:30px 1fr auto auto;gap:14px;align-items:center;
@@ -296,6 +304,7 @@
 /* ===== DOSSIER: lớp render thay khối này bằng Dossier thật ===== */
 const DOSSIER = {
   "meta":{"schema_version":"1.0.0","dossier_id":"d-9f2a","revision":0,
+    "mode":"STATELESS",
     "title":"Template Designer cho Product X",
     "one_liner":"Trình thiết kế template ZNS + gọi API gửi, tận dụng ~80% hạ tầng Product X hiện có",
     "created_at":"2026-06-13T09:00:00Z","updated_at":"2026-06-13T09:40:00Z"},
@@ -387,6 +396,10 @@ const STATUS_LABEL={PENDING:"Chờ",RUNNING:"Đang chạy",PASSED:"Đạt",FAILE
 const TYPE_LABEL={TYPE_1:"Khó đảo ngược",TYPE_2:"Đảo được"};
 const ASM_STATUS_LABEL={UNTESTED:"Chưa kiểm",VALIDATED:"Đã xác thực",INVALIDATED:"Đã bác bỏ",PARTIAL:"Một phần"};
 const AARRR_LABEL={acquisition:"Biết đến",activation:"Khởi động",retention:"Ở lại",referral:"Giới thiệu",revenue:"Trả tiền"};
+const CASE_LABEL={A_IDEA:"Ý tưởng mới",B_PRODUCT:"Sản phẩm đang chạy",C_FEATURE:"Tính năng trên sản phẩm",
+  D_PIVOT:"Xoay hướng",E_DECISION:"Quyết định điểm"};
+const MODE_NOTE={STATELESS:"Chế độ một lần — dữ liệu không lưu; ngưỡng mặc định quần thể, không cá nhân hóa",
+  STATEFUL:"Chế độ có trí nhớ — Dossier đã ghi vào sổ quyết định ~/.validate-suite/; ngưỡng được hiệu chỉnh theo kết quả thật"};
 // Lớp chú giải: thuật ngữ → nghĩa đời thường (bộ fallback, rút từ glossary.md). Renderer tự gạch chân + tooltip.
 const FALLBACK_TERMS={
   "CAC":"Chi phí để có được 1 khách hàng","LTV":"Tổng tiền một khách mang lại trong suốt thời gian gắn bó",
@@ -447,7 +460,7 @@ function renderHeader(d){
   document.getElementById("title").textContent=m.title||"(không tiêu đề)";
   document.getElementById("oneliner").textContent=m.one_liner||"";
   document.getElementById("eyebrow").textContent=
-    "Validation Dossier · "+(d.intake?.case_type||"")+(m.revision?(" · rev "+m.revision):"");
+    "Validation Dossier · "+(CASE_LABEL[d.intake?.case_type]||d.intake?.case_type||"")+(m.revision?(" · rev "+m.revision):"");
   const v=dec.verdict||"PENDING";
   const vw=document.getElementById("verdict");
   vw.textContent=VERDICT_LABEL[v]||v; vw.className="verdict-word v-"+v;
@@ -482,6 +495,19 @@ function sec(num,title,inner,cls){
   return `<section${cls?` class="${cls}"`:""}>
     <div class="sec-head"><span class="sec-num">${num}</span><h2>${title}</h2></div>
     ${inner}</section>`;
+}
+
+function renderContext(d){
+  const o=d.intake?.objective; const mode=d.meta?.mode;
+  const caseLab=CASE_LABEL[d.intake?.case_type];
+  if(!o&&!mode) return "";
+  const q=o?`<div class="problem qs"><div class="k">Câu hỏi được thẩm định</div><div class="q">${esc(o)}</div></div>`:"";
+  const chips=[];
+  if(caseLab) chips.push(`<span class="chip">${esc(caseLab)}</span>`);
+  if(mode) chips.push(`<span class="mode-chip mode-${esc(mode)}">${mode==="STATEFUL"?"Có trí nhớ":"Một lần"}</span>`);
+  const note=mode?`<span class="mode-note">${esc(MODE_NOTE[mode]||mode)}</span>`:"";
+  const meta=(chips.length||note)?`<div class="qs-meta">${chips.join("")}${note}</div>`:"";
+  return sec("","Câu hỏi & bối cảnh",`${q}${meta}`);
 }
 
 function renderExec(d){
@@ -706,7 +732,7 @@ function render(d){
   }
   renderHeader(d);
   document.getElementById("main").innerHTML=[
-    renderExec(d),renderFraming(d),renderPipeline(d),
+    renderContext(d),renderExec(d),renderFraming(d),renderPipeline(d),
     renderCritique(d),renderHats(d),renderParty(d),renderMatrix(d),renderProfitFirst(d),renderJournal(d),renderPlan(d),renderCoaching(d)
   ].join("")+
   `<footer><span>dossier ${esc(d.meta?.dossier_id||"")} · schema ${esc(d.meta?.schema_version||"")}</span>
