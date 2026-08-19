@@ -261,7 +261,7 @@ confidence_threshold = 0.65  nếu decision_type == TYPE_2   (đảo được �
 > Đọc verdict thành hành động: GO → cách không vấp khi launch; PARK → kế hoạch gỡ chặn; NO_GO → cứu
 > được gì + học được gì + khi nào quay lại; PIVOT → xoay mà không mất đà.
 
-### 4.7 `gtm_plan` (chỉ khi `verdict=GO`) & 4.8 `lifecycle`
+### 4.7 `gtm_plan` (sau GO, hoặc plan-mode cho sản phẩm đang sống) & 4.8 `lifecycle`
 ```jsonc
 "gtm_plan": {
   "positioning": "...", "messaging": ["..."], "beachhead": "...",

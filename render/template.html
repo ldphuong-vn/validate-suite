@@ -245,6 +245,8 @@
     color:var(--rail-soft);margin-bottom:4px}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{border:1px solid var(--line);border-radius:7px;padding:4px 10px;font-size:13px;background:#fff}
+  .steps{margin:0;padding-left:18px}
+  .steps li{margin-bottom:4px;font-size:14px}
 
   footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
     font-family:var(--mono);font-size:11px;color:var(--rail-soft);
@@ -380,6 +382,7 @@ const GVERDICT_LABEL={PASS:"Đạt",FAIL:"Không đạt",REVIEW:"Cần xem lại
 const STATUS_LABEL={PENDING:"Chờ",RUNNING:"Đang chạy",PASSED:"Đạt",FAILED:"Không đạt",REVIEW_NEEDED:"Cần xem lại",ASSERTED:"Đã ghi nhận",SKIPPED:"Bỏ qua"};
 const TYPE_LABEL={TYPE_1:"Khó đảo ngược",TYPE_2:"Đảo được"};
 const ASM_STATUS_LABEL={UNTESTED:"Chưa kiểm",VALIDATED:"Đã xác thực",INVALIDATED:"Đã bác bỏ",PARTIAL:"Một phần"};
+const AARRR_LABEL={acquisition:"Biết đến",activation:"Khởi động",retention:"Ở lại",referral:"Giới thiệu",revenue:"Trả tiền"};
 // Lớp chú giải: thuật ngữ → nghĩa đời thường (rút từ glossary.md). Renderer tự gạch chân + tooltip.
 const TERMS={
   "CAC":"Chi phí để có được 1 khách hàng","LTV":"Tổng tiền một khách mang lại trong suốt thời gian gắn bó",
@@ -643,17 +646,24 @@ function renderJournal(d){
 }
 
 function renderPlan(d){
-  const g=d.decision?.verdict==="GO"?d.gtm_plan:null; const lc=d.lifecycle;
+  const g=d.gtm_plan; const lc=d.lifecycle; // render khi có dữ liệu — không chặn theo verdict (plan-mode: sản phẩm đang sống = GO sẵn)
   if(!g&&!lc) return "";
   const chips=arr=>`<div class="chips">${(arr||[]).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div>`;
+  const steps=arr=>`<ul class="steps">${(arr||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
   let rows="";
   if(g){
     if(g.positioning) rows+=`<div class="row"><div class="k">Định vị</div><div>${esc(g.positioning)}</div></div>`;
     if(g.beachhead) rows+=`<div class="row"><div class="k">Nhóm khách đầu cầu</div><div>${esc(g.beachhead)}</div></div>`;
+    if(g.messaging) rows+=`<div class="row"><div class="k">Thông điệp chính</div>${steps(g.messaging)}</div>`;
     if(g.channels) rows+=`<div class="row"><div class="k">Kênh</div>${chips(g.channels)}</div>`;
-    if(g.north_star_metric) rows+=`<div class="row"><div class="k">Chỉ số quan trọng nhất</div><div>${esc(g.north_star_metric)}</div></div>`;
+    if(g.north_star_metric) rows+=`<div class="row"><div class="k">Chỉ số quan trọng nhất (North Star)</div><div>${esc(g.north_star_metric)}</div></div>`;
+    if(g.launch_steps) rows+=`<div class="row"><div class="k">Bước launch</div><ol class="steps">${g.launch_steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol></div>`;
+    if(g.aarrr&&Object.keys(g.aarrr).length) rows+=`<div class="row"><div class="k">Khung đo AARRR — 5 bước khách đi qua</div><div class="chips">${Object.entries(g.aarrr).map(([k,v])=>`<span class="chip"><b>${AARRR_LABEL[k]||esc(k)}</b>: ${esc(v)}</span>`).join("")}</div></div>`;
+    if(g.okrs) rows+=g.okrs.map(o=>`<div class="row"><div class="k">Mục tiêu: ${esc(o.objective)}</div>${steps(o.key_results)}</div>`).join("");
   }
   if(lc){
+    if(lc.funnel_metrics) rows+=`<div class="row"><div class="k">Chỉ số phễu cần đo</div>${chips(lc.funnel_metrics)}</div>`;
+    if(lc.cohort_retention) rows+=`<div class="row"><div class="k">Giữ khách theo cohort</div><div>${esc(lc.cohort_retention)}</div></div>`;
     if(lc.expand_criteria) rows+=`<div class="row"><div class="k">Tiêu chí mở rộng</div>${chips(lc.expand_criteria)}</div>`;
     if(lc.sunset_criteria) rows+=`<div class="row"><div class="k">Tiêu chí ngừng / thu hẹp</div>${chips(lc.sunset_criteria)}</div>`;
     if(lc.revalidation) rows+=`<div class="row"><div class="k">Xem lại định kỳ</div><div>${esc(lc.revalidation.trigger)} → tầng ${(lc.revalidation.stages_to_recheck||[]).join(", ")}</div></div>`;
