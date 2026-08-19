@@ -5,7 +5,7 @@
 
 ## TL;DR
 - **External / dùng một lần → STATELESS**, khóa cứng khi deploy. Người dùng không thấy, không đổi được.
-- **Bản private (có backend) → STATEFUL (mentor)**, bật từ quyết định đầu tiên.
+- **Bản private → STATEFUL-file (mentor)** — store tại `~/.validate-suite/`, không cần backend; bật từ quyết định đầu tiên.
 - Chỉ ép STATELESS lẻ khi muốn một quyết định "incognito" (không vào hồ sơ).
 - **Không có default toàn cục — bề mặt quyết định default.**
 
@@ -20,15 +20,15 @@ accountability). Nên mỗi bề mặt mang default đúng của nó.
 | Bề mặt | mode | Set ở đâu |
 |---|---|---|
 | Mini-app public (external) | `STATELESS` hard-code | Cấu hình deploy; ẩn khỏi người dùng |
-| Instance private của bạn | `STATEFUL` + buộc vào memory org | Cấu hình instance |
-| Khách tư vấn (kiểu NSTech) | `STATELESS` mặc định | Chỉ dựng instance STATEFUL riêng nếu khách ĐỒNG Ý |
+| Chat riêng (mọi agent) | `STATEFUL`-file mặc định | Skill tự tạo `~/.validate-suite/` lần đầu (hỏi một lần) |
+| Mini-app sau này (đa người dùng) | `STATEFUL`-PostgreSQL | Cấu hình instance, bảng theo schema mục 6 |
 
 Trong code (mini-app/backend): set `meta.mode` khi khởi tạo Dossier, không để route người dùng cuối chạm.
 
 ## Gọi khi đang chạy dạng skill trong chat
 
 - **Mặc định mentor (bản private của anh):** không cần nói gì.
-  > "validate ý tưởng X"  → STATEFUL
+  > "validate ý tưởng X"  → STATEFUL-file (store `~/.validate-suite/`; chưa có thì skill hỏi MỘT câu có tạo không)
 - **Ép một lần không lưu (incognito decision):** nói rõ.
   > "validate X, chế độ một lần, đừng lưu vào hồ sơ"  → STATELESS cho riêng lần đó
 - **Khi mơ hồ:** orchestrator hỏi đúng một câu (mentor hay một-lần?) rồi nhớ cho cả phiên.
@@ -43,8 +43,9 @@ biệt là nó BẮT ĐẦU GHI. Mentor mode không cho giá trị tức thì; n
 CÓ OUTCOME thì calibration + profile mới đủ dữ liệu để thật sự "biết anh". → Với bản private, **bật
 STATEFUL từ quyết định đầu tiên**: càng sớm gieo, càng sớm thu.
 
-## Checklist cho người vận hành (bản stateful)
-1. Đặt `mode = STATEFUL` ở cấu hình instance; gắn `user_id`/org_id vào memory.
-2. Bật scheduled job: outcome polling + tripwire eval + nudges (xem `mentor-layer.md` mục 2,5,6).
-3. Nối `confidence < threshold` và tripwire `TRIPPED` vào cổng phê duyệt con người sẵn có.
-4. Đảm bảo instance external/khách tách riêng và để `STATELESS` — không trộn memory giữa các org.
+## Checklist cho người vận hành (bản stateful-file)
+1. Store tại `~/.validate-suite/` — skill hỏi và tự tạo lần đầu chạy; không cần dựng gì trước.
+2. Heartbeat chạy ngay trong skill (Step 0) — không cần scheduled job.
+3. Tùy chọn nâng cao: cấu hình hook/session-start của agent để mở phiên là kiểm store.
+4. Đảm bảo instance external/khách để STATELESS và không trỏ vào store riêng của anh — không trộn
+   memory giữa các bề mặt.

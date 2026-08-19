@@ -7,10 +7,16 @@
 meta.mode : STATEFUL | STATELESS
 ```
 
-## STATEFUL — bản có backend + private use (hướng "super mentor")
+## STATEFUL — bản có trí nhớ (hướng "super mentor")
 Có trí nhớ. Mỗi Dossier được lưu vào sổ quyết định; outcome được theo dõi; ngưỡng được hiệu chỉnh
 theo kết quả thật; bộ học pattern của chính người dùng và chủ động nhắc. Đây là track biến validator
-thành mentor — xem `mentor-layer.md`. Chạy trên hạ tầng backend (PostgreSQL + lớp trí nhớ nhiều tầng + scheduled jobs).
+thành mentor — xem `mentor-layer.md`. Chạy trên một **store thật sự ghi được** — mặc định là file
+store tại `~/.validate-suite/` (xem `store.md`), không cần hạ tầng; mini-app sau này đổi sang
+PostgreSQL cùng interface đó.
+
+**Heartbeat thay scheduled job:** nudge outcome quá hạn / tripwire đến hạn chạy TẠI Step 0 của
+skill (trước Intake, tối đa 1–2 dòng) — không cần cron server. Tùy chọn: hook/session-start của
+agent để mở phiên là kiểm store.
 
 Bật:
 - Đọc `founder_profile` để cá nhân hóa critique ("anh hay overestimate cầu — giả định này cần soi kỹ").
@@ -36,3 +42,5 @@ lượng quyết định bền vững đến từ việc theo dõi kết quả q
 - Lõi (stages/gates/lenses/render/schema) GIỐNG HỆT giữa hai mode — chỉ lớp phủ khác.
 - `meta.mode` luôn được ghi và kiểm khi đọc.
 - Guardrails (`guardrails.md`) áp cho cả hai. STATELESS không được "bịa" calibration mà nó không có.
+- File store là store hợp lệ: câu "đã lưu" phải đi kèm đường dẫn file thật; không có store (kể cả
+  file) → STATELESS và nói rõ giới hạn trong báo cáo.

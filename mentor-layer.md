@@ -2,7 +2,8 @@
 
 > Đây là lớp biến validator thành mentor. Chỉ chạy ở `mode = STATEFUL`. Nó lấp đúng hai thứ mà không
 > file nào tự lấp được: **trí nhớ về người dùng** và **bằng chứng rằng phán đoán của bộ là đúng**.
-> Ánh xạ thẳng lên lớp trí nhớ nhiều tầng + scheduled jobs của backend. STATELESS bỏ qua toàn bộ file này.
+> Ánh xạ thẳng lên lớp trí nhớ nhiều tầng; scheduled jobs được thay bằng heartbeat tại Step 0 của
+> skill (xem `store.md`). STATELESS bỏ qua toàn bộ file này.
 
 Bốn thành phần, theo thứ tự phụ thuộc: Ledger → Outcome → Calibration → Profile → (Nudges).
 
@@ -80,6 +81,19 @@ Trên scheduled job, mentor tự khởi xướng — không đợi bạn mang qu
 - Tripwire đã chạm (mục 5).
 - Dossier quá hạn rà outcome (mục 2).
 - Dossier MỚI đang lặp lại một blind spot cũ (mục 4) → cảnh báo ngay tại cổng framing.
+
+## File backend (mặc định — không cần PostgreSQL)
+Toàn bộ bốn thành phần trên chạy được bằng **file store** tại `~/.validate-suite/` (layout +
+interface chi tiết ở `store.md`): ledger là các file Dossier, outcome là JSONL append-only,
+tripwire/profile/calibration là JSON. Điều khác bản PostgreSQL:
+
+- **Scheduled jobs → heartbeat:** nudge outcome quá hạn / tripwire đến hạn chạy tại Step 0 của
+  skill, chỉ khi có phiên làm việc — không có cron 24/7.
+- **Calibration tính lúc đọc** (`recompute_calibration`), không cần job riêng; vẫn tôn trọng ngưỡng
+  ≥15–20 outcome mỗi dải trước khi ra số.
+- File store nằm ngoài thư mục mọi agent — mentor theo người, không theo agent.
+
+PostgreSQL vẫn là đích cho mini-app đa người dùng — cùng interface, bảng theo schema mục 6.
 
 ## Ánh xạ lên một backend stateful
 - **episodic** ← decision ledger + outcomes (mục 1–2)
