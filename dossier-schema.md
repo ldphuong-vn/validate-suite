@@ -78,7 +78,7 @@ tripwire_status  : ARMED | TRIPPED | RESOLVED                          # chỉ S
   "lenses":    { /* khối phân tích/phản biện tái dùng */ },
   "decision":  { /* output của stage 6: verdict + confidence + journal */ },
   "coaching":  { /* lời cố vấn cho người dùng: bước đi tiếp, rủi ro cần canh, khoảng trống năng lực */ },
-  "gtm_plan":  { /* chỉ khi verdict = GO */ },
+  "gtm_plan":  { /* sau GO, hoặc plan-mode cho sản phẩm đang sống */ },
   "lifecycle": { /* metrics, cohort, tiêu chí expand/sunset, re-validation */ },
   "render":    { /* metadata lần render, không phải nội dung HTML */ }
 }
@@ -96,6 +96,7 @@ tripwire_status  : ARMED | TRIPPED | RESOLVED                          # chỉ S
 | `revision` | int | lần re-validation thứ mấy (0 = lần đầu) |
 | `title` | string | tên ý tưởng/sản phẩm/quyết định |
 | `one_liner` | string | mô tả một câu |
+| `mode` | string | `STATEFUL` \| `STATELESS` (xem `modes.md`, `store.md`). Optional — thiếu thì report không hiện dòng chế độ |
 | `created_at` / `updated_at` | ISO 8601 | dấu thời gian |
 
 ### 4.2 `intake`  — *nơi route đường đi và khai báo decision makers*
