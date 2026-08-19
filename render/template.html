@@ -383,8 +383,8 @@ const STATUS_LABEL={PENDING:"Chờ",RUNNING:"Đang chạy",PASSED:"Đạt",FAILE
 const TYPE_LABEL={TYPE_1:"Khó đảo ngược",TYPE_2:"Đảo được"};
 const ASM_STATUS_LABEL={UNTESTED:"Chưa kiểm",VALIDATED:"Đã xác thực",INVALIDATED:"Đã bác bỏ",PARTIAL:"Một phần"};
 const AARRR_LABEL={acquisition:"Biết đến",activation:"Khởi động",retention:"Ở lại",referral:"Giới thiệu",revenue:"Trả tiền"};
-// Lớp chú giải: thuật ngữ → nghĩa đời thường (rút từ glossary.md). Renderer tự gạch chân + tooltip.
-const TERMS={
+// Lớp chú giải: thuật ngữ → nghĩa đời thường (bộ fallback, rút từ glossary.md). Renderer tự gạch chân + tooltip.
+const FALLBACK_TERMS={
   "CAC":"Chi phí để có được 1 khách hàng","LTV":"Tổng tiền một khách mang lại trong suốt thời gian gắn bó",
   "WTP":"Mức khách sẵn lòng trả","ROAS":"Doanh thu thu về trên mỗi đồng quảng cáo",
   "CPA":"Chi phí cho mỗi hành động (vd 1 đăng ký)","CPM":"Chi phí cho 1000 lượt hiển thị quảng cáo",
@@ -400,6 +400,9 @@ const TERMS={
   "margin":"Biên lợi nhuận — phần còn lại sau khi trừ chi phí trực tiếp","fence":"Hàng rào ngăn cách giữa các gói giá",
   "Profit First":"Nguyên tắc: thiết kế để có lời ngay từ nhỏ, lấy lợi nhuận ra trước"
 };
+// Nguồn duy nhất của chú giải là render.glossary (orchestrator đổ từ glossary.md);
+// bộ fallback chỉ lấp thuật ngữ thiếu khi mở file trực tiếp không kèm Dossier thật.
+const TERMS=Object.assign({},FALLBACK_TERMS,DOSSIER.render?.glossary||{});
 function glossify(root){
   const keys=Object.keys(TERMS).sort((a,b)=>b.length-a.length);
   const rx=new RegExp("\\b("+keys.map(k=>k.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\$&")).join("|")+")\\b","g");

@@ -278,8 +278,13 @@ confidence_threshold = 0.65  nếu decision_type == TYPE_2   (đảo được �
 
 ### 4.9 `render`
 ```jsonc
-{ "rendered_at": "ISO8601", "output_path": "validation-report.html", "template_version": "1.0.0" }
+{ "rendered_at": "ISO8601", "output_path": "validation-report.html", "template_version": "1.0.0",
+  "glossary": { "CAC": "một câu định nghĩa đời thường" } }
 ```
+> `glossary` (optional): orchestrator đọc từ `glossary.md` và đổ vào đây trước khi render —
+> **nguồn duy nhất** của bộ chú giải tooltip trong báo cáo. Template chỉ giữ bộ fallback cho
+> trường hợp mở file trực tiếp không có dữ liệu này; thuật ngữ nào có trong `glossary` thì
+> ghi đè fallback tương ứng.
 
 ---
 

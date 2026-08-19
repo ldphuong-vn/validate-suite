@@ -119,6 +119,10 @@ When the run ends (completed or stopped), set `render.*` and trigger the rendere
 Dossier JSON into `render/template.html` (replace the `const DOSSIER = {…}` block) and write the
 output HTML. Then present the file. The renderer is the only component that produces HTML.
 
+Before injecting, populate `render.glossary`: read `glossary.md` and convert it into a
+`{term: one-line plain-language definition}` map. The report's tooltips draw from that single
+source — the template only keeps a static fallback for when a Dossier carries no glossary.
+
 ## Console style
 One line per stage, machine-clean, Vietnamese to match the user. Lead each with `[Tầng N · <name>]`,
 then verdict/score, then a single reason clause. Reserve longer explanation for the rendered report,
