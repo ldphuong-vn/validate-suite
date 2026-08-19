@@ -318,8 +318,12 @@ const DOSSIER = {
   "stages":[
     {"stage_id":0,"name":"FRAMING","mode":"MUST_RUN","status":"PASSED","score":0.8,"gates":[],"ran_at":"2026-06-13T09:05:00Z"},
     {"stage_id":1,"name":"HARD_GATE","mode":"MUST_RUN","status":"PASSED","score":1.0,"gates":[
-      {"id":"G1.1","question":"Hợp portfolio Product X?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"Là fast-follow đã nêu trong roadmap sản phẩm"},
-      {"id":"G1.2","question":"Khả thi kỹ thuật <1 tháng?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"~80% hạ tầng sẵn, ước tính 2–3 tuần"}]},
+      {"id":"G1.1","question":"Vấn đề có THẬT không?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"Khách hỏi tính năng ZNS qua support 3 tháng liền","evidence_type":"MEASURED"},
+      {"id":"G1.2","question":"Có ĐAU đủ để trả tiền / đổi hành vi?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"Nhu cầu gửi ZNS có thương hiệu nêu trong phiếu hỗ trợ","evidence_type":"USER_STATED"},
+      {"id":"G1.3","question":"VỚI-TỚI-ĐƯỢC qua kênh nào?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"Upsell in-app tới chính tập khách hiện có","evidence_type":"MEASURED"},
+      {"id":"G1.4","question":"Hợp portfolio Product X?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"Fast-follow đã nêu trong roadmap sản phẩm","evidence_type":"CITED","evidence_refs":["roadmap-2026.md#q2"]},
+      {"id":"G1.5","question":"Khả thi kỹ thuật trong khung thời gian hợp lý?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"~80% hạ tầng sẵn, ước tính 2–3 tuần","evidence_type":"ASSUMED"},
+      {"id":"G1.6","question":"Có chướng ngại pháp lý / tuân thủ?","verdict":"PASS","score":1.0,"threshold":1.0,"evidence":"ZNS là kênh chính thống của Zalo OA, không vi phạm chính sách","evidence_type":"CITED","evidence_refs":["zalo.ca/docs/zns"]}]},
     {"stage_id":2,"name":"PROBLEM_VAL","mode":"ASSERT","status":"ASSERTED","score":0.7,"gates":[],"notes":"Khách hỏi tính năng ZNS qua support — bằng chứng gián tiếp"},
     {"stage_id":3,"name":"SOLUTION_VAL","mode":"MUST_RUN","status":"REVIEW_NEEDED","score":0.6,"gates":[
       {"id":"G3.1","question":"RAT: khách sẽ tự dùng designer thay vì nhờ support?","verdict":"REVIEW","score":0.6,"threshold":0.65,"evidence":"Chưa có test thực, cần phỏng vấn 5 khách"}],"lenses_applied":["PREMORTEM"]},

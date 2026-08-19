@@ -29,7 +29,7 @@ easily copy once this works (data, network effects, switching cost, regulatory/l
 Score 0..1. `threshold: 0.6`. "We'll move faster" is not a moat — flag low if no structural defensibility.
 
 ## Writes
-`stages[]` record (`stage_id: 4`, gate G4.1, status, score), appends to `lenses.red_team`.
+`stages[]` record (`stage_id: 4`, gates G4.1 + G4.2, status, score), appends to `lenses.red_team`.
 
 ## Console
 `[Tầng 4 · Thị trường & GTM] (status) (score) — beachhead: <…>`

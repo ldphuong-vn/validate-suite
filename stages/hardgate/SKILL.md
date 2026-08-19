@@ -12,13 +12,13 @@ Write only into the Dossier. Do not render.
 ## Gates (all must PASS)
 Score each 1.0 (PASS) or 0.0 (FAIL), `threshold: 1.0`. Record the evidence clause for each.
 
-1. **THẬT** — is the problem real (does the situation actually occur for real people)?
-2. **ĐAU** — is it painful enough that someone would pay / change behavior to solve it?
-3. **VỚI-TỚI-ĐƯỢC** — is there a realistic channel to reach these people?
-4. **HỢP PORTFOLIO** — does it fit the company's focus/strategy? (Flag, don't auto-fail, if it's a
+1. **G1.1 · THẬT** — is the problem real (does the situation actually occur for real people)?
+2. **G1.2 · ĐAU** — is it painful enough that someone would pay / change behavior to solve it?
+3. **G1.3 · VỚI-TỚI-ĐƯỢC** — is there a realistic channel to reach these people?
+4. **G1.4 · HỢP PORTFOLIO** — does it fit the company's focus/strategy? (Flag, don't auto-fail, if it's a
    defensible departure — note it for the decision gate's Six Hats.)
-5. **KHẢ THI** — is it buildable with available resources/skills in a sane timeframe?
-6. **HỢP PHÁP** — no legal/compliance blocker (data, payments, sector rules)?
+5. **G1.5 · KHẢ THI** — is it buildable with available resources/skills in a sane timeframe?
+6. **G1.6 · HỢP PHÁP** — no legal/compliance blocker (data, payments, sector rules)?
 
 ## Verdict
 All gates PASS → stage `status: PASSED`, score 1.0. Any FAIL → `status: FAILED`, score 0.0, and the

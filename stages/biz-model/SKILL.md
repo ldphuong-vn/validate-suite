@@ -34,19 +34,19 @@ Ask: reverse formula (profit-first vs profit-as-leftover?), profitable at the *s
 realistic) rather than deferred to future scale? Score 0..1. `threshold: 0.6`. "Profitable once we're
 big" → low score, unless a scale-first bet is explicitly chosen (then flag the cash-flow tradeoff).
 
-`G5.4` — **Paid economics** (run ONLY when paid digital ads are a real part of acquisition; see
-`../../lenses/digital-ads.md`; otherwise SKIP — do not create this gate for non-ads cases): is LTV:CAC
-healthy and payback acceptable *at the real budget level*, accounting for funnel math (CPM/CTR/CVR→CPA)
-and marginal-CAC saturation? Score 0..1. `threshold: 0.6`. No campaign data yet → `ASSUMED`, capped.
-
 `G5.3` — **Pricing strategy** (run when the decision touches price; see `../../lenses/pricing.md`):
 is price anchored to value (not just cost/competitor), is the price *metric/packaging* right (does it
 scale with the customer's success?), and is willingness-to-pay evidenced rather than guessed? Score
 0..1. `threshold: 0.6`. For an existing product (e.g. repricing), this is mostly an audit of whether
 the tier structure maps to value delivered. Untested WTP → `ASSUMED`, capped.
 
+`G5.4` — **Paid economics** (run ONLY when paid digital ads are a real part of acquisition; see
+`../../lenses/digital-ads.md`; otherwise SKIP — do not create this gate for non-ads cases): is LTV:CAC
+healthy and payback acceptable *at the real budget level*, accounting for funnel math (CPM/CTR/CVR→CPA)
+and marginal-CAC saturation? Score 0..1. `threshold: 0.6`. No campaign data yet → `ASSUMED`, capped.
+
 ## Writes
-`stages[]` record (`stage_id: 5`, gates G5.1 + G5.2, status, score, assumptions in notes).
+`stages[]` record (`stage_id: 5`, gates G5.1 + G5.2 (+ G5.3 nếu chạm giá, + G5.4 nếu chạy quảng cáo trả tiền), status, score, assumptions in notes).
 
 ## Console
 `[Tầng 5 · Mô hình KD] (status) (score) — <điểm yếu/mạnh kinh tế chính>`
