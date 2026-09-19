@@ -315,25 +315,25 @@
   /* ===== plan diagrams ===== */
   .pv-sub{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--rail);font-weight:600;margin:24px 0 12px}
-  .stepper{counter-reset:st;list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:22px 26px}
-  .stepper li{counter-increment:st;display:flex;gap:8px;align-items:center;background:#fff;
+  .stepper{counter-reset:st;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px}
+  .stepper li{counter-increment:st;display:flex;gap:10px;align-items:center;background:#fff;
     border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;position:relative}
   .stepper .n::before{content:counter(st)}
   .stepper .n{font-family:var(--mono);font-weight:700;color:var(--rail);background:#EDEFF6;
     border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;
     font-size:12px;flex:none}
-  .stepper li+li::before{content:"→";position:absolute;left:-19px;top:50%;
-    transform:translateY(-50%);color:var(--rail-soft);font-weight:600}
+  .stepper li+li::before{content:"↓";position:absolute;left:24px;top:-18px;
+    color:var(--rail-soft);font-weight:600}
   .ns-card{margin:0;padding:14px 16px;border-left:3px solid var(--rail);background:#F3F5FB;
     border-radius:0 8px 8px 0}
   .ns-card .nk{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--rail-soft);margin-bottom:4px;font-weight:600}
   .ns-card .nv{font-family:var(--disp);font-size:17px;font-weight:600}
-  .funnel{display:flex;flex-wrap:wrap;gap:20px}
-  .funnel-step{flex:1 1 150px;min-width:150px;background:#fff;border:1px solid var(--line);
-    border-top:3px solid var(--rail);border-radius:8px;padding:10px 12px;position:relative}
-  .funnel-step+.funnel-step::before{content:"→";position:absolute;left:-16px;top:50%;
-    transform:translateY(-50%);color:var(--rail-soft);font-weight:600}
+  .funnel{display:flex;flex-direction:column;gap:16px}
+  .funnel-step{background:#fff;border:1px solid var(--line);border-left:3px solid var(--rail);
+    border-radius:8px;padding:10px 12px;position:relative}
+  .funnel-step+.funnel-step::before{content:"↓";position:absolute;left:24px;top:-21px;
+    color:var(--rail-soft);font-weight:600}
   .funnel-step .fl{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
     color:var(--rail);font-weight:600;margin-bottom:4px}
   .funnel-step p{margin:0;font-size:13.5px;color:var(--ink-soft)}
