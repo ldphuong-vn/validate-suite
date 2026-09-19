@@ -182,6 +182,24 @@
   .hat-green{border-top-color:var(--hat-green)} .hat-green .hl{color:var(--hat-green)}
   .hat-blue{border-top-color:var(--hat-blue)} .hat-blue .hl{color:var(--hat-blue)}
 
+  /* SWOT 2x2 */
+  .swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .swot{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;border-top:3px solid var(--ink)}
+  .swot .hl{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+  .swot ul{margin:0;padding-left:18px}
+  .swot li{margin-bottom:5px;font-size:14px;color:var(--ink-soft)}
+  .swot-S{border-top-color:var(--go)} .swot-S .hl{color:var(--go)}
+  .swot-W{border-top-color:var(--nogo)} .swot-W .hl{color:var(--nogo)}
+  .swot-O{border-top-color:var(--rail)} .swot-O .hl{color:var(--rail)}
+  .swot-T{border-top-color:var(--pivot)} .swot-T .hl{color:var(--pivot)}
+
+  /* Porter five forces */
+  .forces{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .force{border:1px solid var(--line);border-radius:10px;padding:15px 16px;background:#fff}
+  .force .fh{margin-bottom:6px}
+  .force .fn{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--rail);font-weight:600}
+  .force p{margin:0;font-size:14px;color:var(--ink-soft)}
+
   /* decision matrix */
   table.matrix{width:100%;border-collapse:collapse;font-size:14px;margin-top:4px}
   table.matrix th,table.matrix td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--line)}
@@ -266,6 +284,8 @@
     .verdict-seal{text-align:left;min-width:0}
     .w-grid{grid-template-columns:1fr}
     .hats{grid-template-columns:1fr}
+    .swot-grid{grid-template-columns:1fr}
+    .forces{grid-template-columns:1fr}
     .crit-grid{grid-template-columns:1fr}
     .party{grid-template-columns:1fr}
     .coach-grid{grid-template-columns:1fr}
@@ -349,6 +369,11 @@ const DOSSIER = {
       "yellow":"Chi phí thấp, mở đường cho ZNS Trigger + Mini App sau",
       "green":"Pre-sell ZNS như add-on trước khi build full UI",
       "blue":"Kết luận: GO có điều kiện — kèm phỏng vấn cầu song song"},
+    "swot":{"attached_to_stage":6,
+      "strengths":["~80% hạ tầng Product X tái dùng được","Đã có tập khách active + kênh in-app sẵn"],
+      "weaknesses":["Chưa đo được mức cầu ZNS thật","Team chưa từng làm UI designer"],
+      "opportunities":["Zalo đang đẩy ZNS cho SMB — xu hướng kênh","Mở đường ZNS Trigger + Mini App sau này"],
+      "threats":["Agency làm template ZNS giá rẻ","Zalo đổi chính sách/pricing ZNS"]},
     "premortem":[
       {"failure_mode":"Ship xong ít người dùng","cause":"Giả định A1 (cầu thực) chưa được xác thực","mitigation":"Phỏng vấn 5 khách hiện tại trước khi build UI đầy đủ"},
       {"failure_mode":"Vượt timeline 2–3 tuần","cause":"Phần API ZNS phức tạp hơn ước tính","mitigation":"Spike kỹ thuật 2 ngày trước khi cam kết sprint"}],
@@ -401,6 +426,8 @@ const CASE_LABEL={A_IDEA:"Ý tưởng mới",B_PRODUCT:"Sản phẩm đang chạ
   D_PIVOT:"Xoay hướng",E_DECISION:"Quyết định điểm"};
 const MODE_NOTE={STATELESS:"Chế độ một lần — dữ liệu không lưu; ngưỡng mặc định quần thể, không cá nhân hóa",
   STATEFUL:"Chế độ có trí nhớ — Dossier đã ghi vào sổ quyết định ~/.validate-suite/; ngưỡng được hiệu chỉnh theo kết quả thật"};
+const FORCE_LABEL={rivalry:"Đối thủ hiện tại",new_entrants:"Đối thủ mới tiêm nhập",
+  substitutes:"Sản phẩm thay thế",supplier_power:"Quyền lực nhà cung cấp",buyer_power:"Quyền lực khách hàng"};
 // Lớp chú giải: thuật ngữ → nghĩa đời thường (bộ fallback, rút từ glossary.md). Renderer tự gạch chân + tooltip.
 const FALLBACK_TERMS={
   "CAC":"Chi phí để có được 1 khách hàng","LTV":"Tổng tiền một khách mang lại trong suốt thời gian gắn bó",
@@ -613,6 +640,27 @@ function renderHats(d){
   return sec("","Sáu chiếc mũ",`<div class="hats">${cards}</div>`);
 }
 
+function renderSwot(d){
+  const s=d.lenses?.swot; if(!s) return "";
+  const cells=[["S","swot-S","Điểm mạnh · nội lực","strengths"],["W","swot-W","Điểm yếu · nội lực","weaknesses"],
+    ["O","swot-O","Cơ hội · bên ngoài","opportunities"],["T","swot-T","Đe dọa · bên ngoài","threats"]];
+  const q=cells.map(([tag,cls,lab,key])=>{
+    const items=(s[key]||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>—</li>";
+    return `<div class="swot ${cls}"><div class="hl">${tag} · ${lab}</div><ul>${items}</ul></div>`;
+  }).join("");
+  return sec("","SWOT — nội lực & bên ngoài",`<div class="swot-grid">${q}</div>`);
+}
+
+function renderPorter(d){
+  const p=d.lenses?.porter;
+  const keys=p?Object.keys(FORCE_LABEL).filter(k=>p[k]):[];
+  if(!keys.length) return "";
+  const cards=keys.map(k=>`<div class="force"><div class="fh"><span class="fn">${FORCE_LABEL[k]}</span></div>
+    <p>${esc(p[k])}</p></div>`).join("");
+  const v=p.verdict?`<div class="pf-verdict">${esc(p.verdict)}</div>`:"";
+  return sec("","Cấu trúc ngành (Porter — năm lực lượng)",`<div class="forces">${cards}</div>${v}`);
+}
+
 function renderParty(d){
   const p=d.lenses?.party_mode; if(!p||!(p.panel||[]).length) return "";
   const cards=(p.panel||[]).map(x=>`<div class="pcard lean-${x.lean}">
@@ -734,7 +782,7 @@ function render(d){
   renderHeader(d);
   document.getElementById("main").innerHTML=[
     renderContext(d),renderExec(d),renderFraming(d),renderPipeline(d),
-    renderCritique(d),renderHats(d),renderParty(d),renderMatrix(d),renderProfitFirst(d),renderJournal(d),renderPlan(d),renderCoaching(d)
+    renderCritique(d),renderHats(d),renderSwot(d),renderPorter(d),renderParty(d),renderMatrix(d),renderProfitFirst(d),renderJournal(d),renderPlan(d),renderCoaching(d)
   ].join("")+
   `<footer><span>dossier ${esc(d.meta?.dossier_id||"")} · schema ${esc(d.meta?.schema_version||"")}</span>
     <span>render ${esc((d.render?.rendered_at||"").slice(0,16).replace("T"," "))} · template ${esc(d.render?.template_version||"1.0.0")}</span></footer>`;
