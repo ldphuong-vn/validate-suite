@@ -19,6 +19,10 @@ the Dossier. Apply the red-team lens (`../../lenses/red-team.md`). Do not render
    estimate expected CAC per channel — some channels structurally can't hit payback; flag those.
 5. **Red-team** the GTM: where does the channel break, where do incumbents crush on price/scale?
    Record into `lenses.red_team`.
+6. **Five Forces** (chỉ khi tag `competitive_landscape` bật — xem `../../lens-registry.md`; tag tắt
+   → không gọi, không ghi gì): assess cấu trúc ngành theo `../../lenses/porter.md`, ghi
+   `lenses.porter` (`attached_to_stage: 4`). Hợp với quyết định vào thị trường mới / chọn beachhead /
+   định vị chạm trực tiếp đối thủ.
 
 ## Gate
 `G4.1` — Reachable beachhead + viable GTM motion + defensible positioning? Score 0..1.
@@ -29,7 +33,7 @@ easily copy once this works (data, network effects, switching cost, regulatory/l
 Score 0..1. `threshold: 0.6`. "We'll move faster" is not a moat — flag low if no structural defensibility.
 
 ## Writes
-`stages[]` record (`stage_id: 4`, gates G4.1 + G4.2, status, score), appends to `lenses.red_team`.
+`stages[]` record (`stage_id: 4`, gates G4.1 + G4.2, status, score), appends to `lenses.red_team` (+ `lenses.porter` nếu tag `competitive_landscape`).
 
 ## Console
 `[Tầng 4 · Thị trường & GTM] (status) (score) — beachhead: <…>`

@@ -53,6 +53,14 @@ voices genuinely different — don't let them all agree. Record `clashes` (which
 why) and a chair's `synthesis`. A sharply divided panel is itself a signal that confidence should be
 lower / more evidence is needed. Party Mode does not set the verdict — it feeds Step 7.
 
+### Step 2c — SWOT (bản đồ nội lực vs bên ngoài)
+Fill `lenses.swot` (`attached_to_stage: 6`) — see `../../lenses/swot.md`. Two to four short bullets
+per quadrant. S/W synthesize what stages 0–5 already recorded (internal — what we control); O/T scan
+outside (market, competitors, substitutes, regulation) with evidence discipline — external claims
+follow the two-source rule (`guardrails.md` §8) or carry weak-evidence tags. The O quadrant is the
+new ground here: yellow hat covers benefits of proceeding, not market opportunities. SWOT feeds
+Step 4's matrix and Step 7's rationale — it does not set the verdict itself.
+
 ### Step 3 — Critique lenses (how this dies)
 This block must be substantive — the report surfaces it prominently. Fill:
 
@@ -173,7 +181,7 @@ If confidence falls below threshold:
 ```
 
 ## What this stage writes (summary)
-- `lenses.six_hats`, `lenses.party_mode`, `lenses.premortem`, `lenses.inversion`, `lenses.red_team`, `lenses.second_order` (chỉ khi tag `downstream_effects`), `lenses.decision_matrix`
+- `lenses.six_hats`, `lenses.party_mode`, `lenses.premortem`, `lenses.inversion`, `lenses.red_team`, `lenses.second_order` (chỉ khi tag `downstream_effects`), `lenses.swot`, `lenses.decision_matrix`
 - `decision.*` (verdict, confidence, confidence_threshold, rationale, decision_type, journal)
 - `coaching.*` (stance, next_moves, watch_risk, capability_gaps, advisor_note)
 - the stage's own entry in `stages[]` (`stage_id: 6`, status, score, `lenses_applied`)

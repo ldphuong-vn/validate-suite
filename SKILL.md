@@ -62,7 +62,8 @@ Also capture: `intake.objective` (what THIS run decides), and `intake.decision_m
 **Emit intent tags** (`intake.tags[]`) — the intent layer that prevents calling irrelevant lenses.
 These are near-binary flags inferred cheaply from the objective/case (no heavy LLM step); ask one
 question only if ambiguous. Vocabulary and the tag→lens mapping live in `lens-registry.md`:
-`has_business_model`, `touches_pricing`, `touches_marketing`, `paid_acquisition`, `downstream_effects`
+`has_business_model`, `touches_pricing`, `touches_marketing`, `paid_acquisition`,
+`downstream_effects`, `competitive_landscape`
 (`decision_gate` is always on when stage 6 runs). `paid_acquisition` implies `touches_marketing`.
 Lenses to invoke = the union of `lens-registry.md` rows for the active tags — do NOT read every lens's
 condition each time; match tags against the registry. Scope stays within business decisions.

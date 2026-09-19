@@ -173,12 +173,28 @@ tripwire_status  : ARMED | TRIPPED | RESOLVED                          # chỉ S
     "green":  "Phương án thay thế, sáng tạo",
     "blue":   "Điều phối: kết luận quy trình"
   },
+  "swot": {                                // stage 6 — tổng hợp nội lực/bên ngoài (luôn chạy cùng bộ critique)
+    "attached_to_stage": 6,
+    "strengths":    [ "Nội lực đang mạnh — rút từ stages 0–5" ],
+    "weaknesses":   [ "Nội lực yếu" ],
+    "opportunities":[ "Cơ hội bên ngoài: thị trường, kênh, xu hướng" ],
+    "threats":      [ "Đe dọa bên ngoài: đối thủ, thay thế, quy định" ]
+  },
   "premortem": [
     { "failure_mode": "Cách dự án này chết", "cause": "Nguyên nhân gốc", "mitigation": "Cách giảm thiểu" }
   ],
   "inversion":   [ "Điều chắc chắn làm hỏng → cần tránh" ],
   "red_team":    [ "Lập luận phản bác mạnh nhất từ phe đối lập" ],
   "second_order":[ { "action": "...", "then": "rồi sao nữa", "and_then": "rồi sao nữa nữa" } ],
+  "porter": {                              // chỉ điền khi tag competitive_landscape bật (cấu trúc ngành — Five Forces)
+    "attached_to_stage": 4,
+    "rivalry": "Đối thủ hiện tại: ai, mạnh/yếu gì",
+    "new_entrants": "Cửa ngõ gia nhập + rào cản",
+    "substitutes": "Sản phẩm/cách làm thay thế",
+    "supplier_power": "Nhà cung cấp nắm gì (API nền tảng, data, hạ tầng)",
+    "buyer_power": "Khách nắm thế nào (chi phí chuyển đổi, mặc cả)",
+    "verdict": "Một câu: ngành thuận gió không + lực đáng sợ nhất"
+  },
   "decision_matrix": {
     "attached_to_stage": 6,
     "criteria": [ { "name": "Pain fit", "weight": 0.4 } ],   // trọng số là SỐ, tổng = 1.0

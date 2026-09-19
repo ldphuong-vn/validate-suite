@@ -15,6 +15,7 @@ touches_pricing      : chạm tới giá / repricing / packaging
 touches_marketing    : chạm tới chiến lược marketing / kênh / messaging
 paid_acquisition     : dùng quảng cáo trả tiền (Meta/Zalo/TikTok/Google Ads)
 downstream_effects   : có hệ quả dây chuyền đáng truy (đặc biệt quyết định Type-1)
+competitive_landscape: quyết định phụ thuộc cấu trúc cạnh tranh (vào thị trường mới, beachhead, định vị chạm đối thủ)
 ```
 Các tag này là near-binary, suy ra rẻ từ `objective`/case — không cần LLM nặng. Khi mơ hồ, Intake hỏi
 đúng một câu rồi nhớ cho phiên.
@@ -23,23 +24,25 @@ Các tag này là near-binary, suy ra rẻ từ `objective`/case — không cầ
 ```
 TAG                  LENSES ĐƯỢC GỌI
 ─────────────────    ─────────────────────────────────────────────────────────────
-decision_gate        six-hats, party-mode, premortem, inversion, red-team, decision-matrix
+decision_gate        six-hats, party-mode, premortem, inversion, red-team, decision-matrix, swot
 has_business_model   profit-first
 touches_pricing      pricing
 touches_marketing    marketing-strategy
 paid_acquisition     digital-ads          (mở rộng của marketing-strategy cho phần paid)
 downstream_effects   second-order
+competitive_landscape porter              (cấu trúc ngành — Five Forces, chạy ở stage 4)
 ```
 
 Dạng máy đọc (mini-app/backend nạp trực tiếp):
 ```json
 {
-  "decision_gate":      ["six-hats","party-mode","premortem","inversion","red-team","decision-matrix"],
+  "decision_gate":      ["six-hats","party-mode","premortem","inversion","red-team","decision-matrix","swot"],
   "has_business_model": ["profit-first"],
   "touches_pricing":    ["pricing"],
   "touches_marketing":  ["marketing-strategy"],
   "paid_acquisition":   ["digital-ads"],
-  "downstream_effects": ["second-order"]
+  "downstream_effects": ["second-order"],
+  "competitive_landscape": ["porter"]
 }
 ```
 
